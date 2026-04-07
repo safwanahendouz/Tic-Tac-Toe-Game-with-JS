@@ -13,3 +13,15 @@ function handleCellClick(event) {
         checkResult();
         switchPlayer();
     }
+
+
+function switchPlayer() {
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    statusText.textContent = `Current Player: ${currentPlayer}`;
+}
+
+
+
+
+
+
