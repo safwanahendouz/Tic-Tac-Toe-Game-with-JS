@@ -1,74 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+}
+
+:root {
+    --bg: #1a1a2e;
+    --surface: #16213e;
+    --border: #0f3460;
+    --x-color: #e94560;
+    --o-color: #53d8fb;
+    --text: #eaeaea;
+    --muted: #8888aa;
+    --winner-glow: #ffd700;
+    --cell-hover: #0f3460;
+    --cell-bg: #1a1a2e;
 }
 
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background: #f0f0f0;
+    min-height: 100vh;
+    background: var(--bg);
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(83, 216, 251, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(233, 69, 96, 0.05) 0%, transparent 50%);
+    font-family: 'Nunito', sans-serif;
 }
 
-.wrapper {
-    position: relative;
-    width: 350px;
-    height: 350px;
-    background: #fff;
+.container {
     display: flex;
-    flex-wrap: wrap;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: 40px 32px;
+    background: var(--surface);
+    border-radius: 20px;
+    border: 2px solid var(--border);
+    box-shadow:
+        0 0 40px rgba(83, 216, 251, 0.08),
+        0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
-.wrapper .box {
-    width: 33.33%;
-    height: 33.33%;
+h1 {
+    font-family: 'Boogaloo', cursive;
+    font-size: 2.6rem;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--x-color), var(--o-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+}
+
+#status {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
+    min-height: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.player-x { color: var(--x-color); }
+.player-o { color: var(--o-color); }
+
+/* ── Board ── */
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 110px);
+    grid-template-rows: repeat(3, 110px);
+    gap: 0;
+    border: 3px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.cell {
+    background: var(--cell-bg);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 2em;
+    font-family: 'Boogaloo', cursive;
+    font-size: 3rem;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.2s ease, transform 0.1s ease;
+    border: 1px solid var(--border);
+    user-select: none;
+    position: relative;
 }
 
-.wrapper .box:hover {
-    background: #f0f0f0;
+.cell:hover:not(.taken) {
+    background: var(--cell-hover);
 }
 
-.info {
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 1.2em;
-    color: #333;
+.cell:active:not(.taken) {
+    transform: scale(0.94);
 }
 
-button {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 10px 20px;
-    font-size: 1em;
-    color: #fff;
-    background: #007BFF;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* X and O colors */
+.cell.player-x { color: var(--x-color); }
+.cell.player-o { color: var(--o-color); }
+
+/* Pop-in animation when a mark is placed */
+.cell.taken {
+    animation: pop-in 0.2s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+@keyframes pop-in {
+    0%   { transform: scale(0.5); opacity: 0; }
+    70%  { transform: scale(1.15); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Winner highlight */
+.cell.winner {
+    background: rgba(255, 215, 0, 0.12);
+    color: var(--winner-glow);
+    animation: winner-pulse 0.7s ease infinite alternate;
+}
+
+@keyframes winner-pulse {
+    from { box-shadow: inset 0 0 0 rgba(255, 215, 0, 0); }
+    to   { box-shadow: inset 0 0 20px rgba(255, 215, 0, 0.3); }
+}
+
+/* ── Reset Button ── */
+#reset-button {
     display: none;
+    padding: 12px 36px;
+    font-family: 'Boogaloo', cursive;
+    font-size: 1.2rem;
+    letter-spacing: 1.5px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--x-color), #c0392b);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 20px rgba(233, 69, 96, 0.4);
+    text-transform: uppercase;
 }
 
-button:hover {
-    background: #0056b3;
+#reset-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(233, 69, 96, 0.6);
 }
 
-
-
-
-
-
-
+#reset-button:active {
+    transform: translateY(0);
+}
